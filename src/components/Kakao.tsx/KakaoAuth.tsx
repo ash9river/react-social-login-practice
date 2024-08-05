@@ -8,6 +8,13 @@ import {
 } from "../../config/KakaoConfig";
 import axios from "axios";
 import { useEffect } from "react";
+import {
+  browserSessionPersistence,
+  OAuthProvider,
+  setPersistence,
+  signInWithCredential,
+} from "firebase/auth";
+import { authService } from "../../firebase/fbInstance";
 
 declare global {
   interface Window {
@@ -18,6 +25,7 @@ declare global {
 function KakaoAuth() {
   const navigate = useNavigate();
   const setIsLoggedIn = useZustandAuthStore((state) => state.setIsLoggedIn);
+  const setUsername = useZustandAuthStore((state) => state.setUsername);
   const code = new URL(document.URL).searchParams.get("code");
 
   async function getKakaoAuthToken() {
@@ -44,10 +52,31 @@ function KakaoAuth() {
           },
         }
       );
-
+      console.log(req);
+      // 밑의 2개줄은 지워도 될거같은..
+      window.Kakao.init(REST_API_KEY);
       window.Kakao.Auth.setAccessToken(req.data.access_token);
+      const provider = new OAuthProvider("oidc.kakao");
+      const credential = provider.credential({
+        idToken: req.data.id_token,
+      });
+      setPersistence(authService, browserSessionPersistence).then(() => {
+        signInWithCredential(authService, credential)
+          .then((result) => {
+            console.log(result);
+
+            const credential = OAuthProvider.credentialFromResult(result);
+            const acToken = credential?.accessToken;
+            const idToken = credential?.idToken;
+            setUsername(result.user.displayName);
+          })
+          .catch((error) => {
+            // Handle error.
+            console.log(error);
+          });
+      });
       setIsLoggedIn(true);
-      navigate("/profile");
+      navigate("/");
     } catch (err) {
       console.log(err);
     }
@@ -88,7 +117,6 @@ export async function getKakaoAuthToken() {
         },
       }
     );
-
     //window.Kakao.init();
     //window.Kakao.Auth.setAccessToken(req.data.access_token);
     return req.data.access_token;

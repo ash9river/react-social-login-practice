@@ -12,6 +12,7 @@ function GoogleLogin() {
 
   async function handleGoogleLogin() {
     const provider = new GoogleAuthProvider(); // provider를 구글로 설정
+    console.log(provider);
 
     setPersistence(authService, browserSessionPersistence).then(() => {
       signInWithPopup(authService, provider) // popup을 이용한 signup

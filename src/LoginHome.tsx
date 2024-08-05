@@ -16,7 +16,6 @@ function LoginHome() {
 
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
-      console.log(user);
       if (user) {
         setIsLoggedIn(true);
         setUsername(user.displayName);
