@@ -11,14 +11,14 @@ function GoogleLogin() {
   const setUsername = useZustandAuthStore((state) => state.setUsername);
 
   async function handleGoogleLogin() {
-    const provider = new GoogleAuthProvider(); // provider를 구글로 설정
+    const provider = new GoogleAuthProvider();
     console.log(provider);
 
     setPersistence(authService, browserSessionPersistence).then(() => {
-      signInWithPopup(authService, provider) // popup을 이용한 signup
+      signInWithPopup(authService, provider)
         .then((data) => {
           setUsername(data.user.displayName);
-          console.log(data); // console로 들어온 데이터 표시
+          console.log(data);
         })
         .catch((err) => {
           console.log(err);

@@ -6,11 +6,6 @@ import GoogleLogin from "./GoogleLogin";
 import EnrollmentForm from "./EnrollmentForm";
 
 function AuthForm() {
-  const username = useZustandAuthStore((state) => state.username);
-  useEffect(() => {
-    console.log(username);
-  }, [username]);
-
   return (
     <div>
       <EnrollmentForm />

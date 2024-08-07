@@ -54,8 +54,6 @@ function KakaoAuth() {
       );
       console.log(req);
       // 밑의 2개줄은 지워도 될거같은..
-      window.Kakao.init(REST_API_KEY);
-      window.Kakao.Auth.setAccessToken(req.data.access_token);
       const provider = new OAuthProvider("oidc.kakao");
       const credential = provider.credential({
         idToken: req.data.id_token,
@@ -75,7 +73,6 @@ function KakaoAuth() {
             console.log(error);
           });
       });
-      setIsLoggedIn(true);
       navigate("/");
     } catch (err) {
       console.log(err);
